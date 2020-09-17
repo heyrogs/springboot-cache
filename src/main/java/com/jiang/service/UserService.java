@@ -6,9 +6,11 @@ import com.jiang.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "user")
 public class UserService {
 
     @Autowired
@@ -112,6 +115,22 @@ public class UserService {
     public void deleteUser(Integer id){
         log.info("deleteUser: {}", id);
         userMapper.deleteUserById(id);
+    }
+
+    @Caching(
+            cacheable = {
+                    @Cacheable(key = "#name")
+            },
+            put = {
+                    @CachePut(key = "#result.id"),
+                    @CachePut(key = "#result.age")
+            }
+    )
+    public UserVO getUserByName(String name){
+        UserDTO userDTO = userMapper.findUserByName(name);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userDTO, userVO);
+        return userVO;
     }
 
 }

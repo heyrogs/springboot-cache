@@ -32,4 +32,6 @@ public interface UserMapper {
     @Select("SELECT * FROM user")
     List<UserDTO> list();
 
+    @Select("SELECT * FROM usre WHERE name LIKE '#{name}%'")
+    UserDTO findUserByName(String name);
 }
