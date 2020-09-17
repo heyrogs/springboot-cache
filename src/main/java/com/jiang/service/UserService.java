@@ -48,8 +48,23 @@ public class UserService {
      * @param id
      * @return
      */
-    @Cacheable(cacheNames = {"user"})
+    @Cacheable(cacheNames = {"user"}, key = "#root.methodName + '['+ #id+ ']'")
     public UserVO getUser(Integer id) {
+        log.info("员工: {}", id);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userMapper.getUserById(id), userVO);
+        return userVO;
+    }
+
+    /**
+     *
+     * 使用 key 的生成策略
+     *
+     * @param id
+     * @return
+     */
+    @Cacheable(cacheNames = {"user"}, key = "keyGenerator")
+    public UserVO getUser2(Integer id) {
         log.info("员工: {}", id);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(userMapper.getUserById(id), userVO);
