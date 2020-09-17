@@ -6,6 +6,7 @@ import com.jiang.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,21 @@ public class UserService {
         BeanUtils.copyProperties(userVO, userDTO);
         userMapper.updateUser(userDTO);
         return userVO;
+    }
+
+
+    /**
+     *
+     * @CacheEvict: 缓存清除
+     *   key: 指定要清除的数据
+     *   allEntries = true: 删除 value/cacheNames中的所有缓存数据
+     *   beforeInvocation = false: 是否在方法执行之前执行
+     * @param id
+     */
+    @CacheEvict(value = "user", key = "#id")
+    public void deleteUser(Integer id){
+        log.info("deleteUser: {}", id);
+        userMapper.deleteUserById(id);
     }
 
 }
