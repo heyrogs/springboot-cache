@@ -1,10 +1,12 @@
 package com.jiang.service;
 
+import com.jiang.entity.dto.UserDTO;
 import com.jiang.entity.vo.UserVO;
 import com.jiang.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +50,7 @@ public class UserService {
      * @param id
      * @return
      */
-    @Cacheable(cacheNames = {"user"}, key = "#root.methodName + '['+ #id+ ']'")
+    @Cacheable(cacheNames = {"user"})
     public UserVO getUser(Integer id) {
         log.info("员工: {}", id);
         UserVO userVO = new UserVO();
@@ -68,6 +70,31 @@ public class UserService {
         log.info("员工: {}", id);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(userMapper.getUserById(id), userVO);
+        return userVO;
+    }
+
+    /**
+     *
+     * 即调用方法， 又更新缓存数据；
+     *
+     * 修改了数据库的某个数据，同时更新缓存；
+     *
+     * 运行时机:
+     * 1、先调用目标方法；
+     * 2、将目标方法结果缓存起来
+     *
+     * 测试步骤：
+     * 1、查询一号员工，查到结果放到缓存中
+     * 2、更新一号员工，
+     *
+     * @param userVO
+     * @return
+     */
+    @CachePut(cacheNames = {"user"}, key = "#result.id")
+    public UserVO updateUser(UserVO userVO){
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(userVO, userDTO);
+        userMapper.updateUser(userDTO);
         return userVO;
     }
 

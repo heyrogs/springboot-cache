@@ -20,7 +20,7 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE id = #{id}")
     UserDTO getUserById(Integer id);
 
-    @Update("UPDATE USER set name=#{name},age=#{age} WHERE id=#{id}")
+    @Update("UPDATE user set name=#{name},age=#{age} WHERE id=#{id}")
     Integer updateUser(UserDTO user);
 
     @Delete("DELETE FROM user WHERE id=#{id}")
