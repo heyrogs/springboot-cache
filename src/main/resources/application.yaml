@@ -3,6 +3,10 @@ spring:
     url: jdbc:mysql://myserver:8505/db02?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=UTF-8
     username: root
     password: root
+# 配置 Redis
+  redis:
+    host: myserver
+    port: 8540
 # 开启驼峰命名法
 mybatis:
   configuration:
@@ -13,3 +17,4 @@ logging:
     com:
       jiang:
         mapper: debug
+
