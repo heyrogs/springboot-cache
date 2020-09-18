@@ -17,4 +17,4 @@ logging:
     com:
       jiang:
         mapper: debug
-
+debug: true

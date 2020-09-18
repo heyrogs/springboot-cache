@@ -41,3 +41,18 @@
     			2、默认创建的 RedisCacheManager 操作redis的时候使用的是 RedisTemplate<Object, Object>
     			3、RedisTemplate<Object, Object> 是 默认使用jdk的序列化机制
        4）、自定义CacheManager；
+
+
+## 四、自定义缓存管理器
+
+1. 打开 debug 日志；
+   
+   在yaml中添加配置 debug: true.
+   
+2. 启动应用， 在日志中查看自动配置的缓存管理器;
+
+   ```
+   RedisCacheConfiguration matched:
+   ```
+   这里 RedisCacheConfiguration 被找到， 其他的缓存配置都是 Did not match , 所以当前缓存支持的是 Redis的缓存管理器。
+
